@@ -1,0 +1,12 @@
+.banner {
+    background-image: url("assets/game_collage.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    margin-bottom: 2%;
+}
+
+.chart {
+    width: 50%;
+}
