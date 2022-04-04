@@ -5,7 +5,7 @@ var config = {
     theme: 'dark',
     // use3dTerrain: false, //set true for enabling 3D maps.
     title: "How Russia's invasion of Ukraine has played out",
-    subtitle: "After a month into Russia's offensive invasion, how did we get here?",
+    subtitle: "A week into Russia's offensive, where does the conflict stand?",
     chapters: [
         {
             id: 'slug-style-id',
@@ -72,5 +72,187 @@ var config = {
                 }
             ]
         },
+        {
+            id: 'third-identifier',
+            alignment: 'left',
+            hidden: false,
+            title: 'February 24, 2022: Putin launches full-scale invasion of Ukraine',
+            image: 'assets/kyiv.jpeg',
+            description: "Three days later, Putin announces a \"special military operation\". Explosions are reported throughout the country as Russian troops move into Ukraine on multiple fronts. The capital, Kyiv, is targeted to the north-west as Russian troops are granted free access through Belarus to launch the attack.",
+            location: {
+                center: [30.74184, 49.46828],
+                zoom: 7.0,
+                pitch: 45.00,
+                bearing: 0.00
+                // flyTo additional controls-
+                // These options control the flight curve, making it move
+                // slowly and zoom out almost completely before starting
+                // to pan.
+                //speed: 2, // make the flying slow
+                //curve: 1, // change the speed at which it zooms out
+            },
+            mapAnimation: 'flyTo',
+            // rotateAnimation: true,
+            callback: '',
+            onChapterEnter: [
+                {
+                    layer: 'kyiv',
+                    opacity: 0.8,
+                },
+                {
+                    layer: 'kyiv-lines',
+                    opacity: 1,
+                },
+                {
+                    layer: 'kyiv-points',
+                    opacity: 1
+                }
+            ],
+            onChapterExit: [
+                {
+                    layer: 'kyiv',
+                    opacity: 0.0
+                },
+                {
+                    layer: 'kyiv-lines',
+                    opacity: 0.0
+                },
+                {
+                    layer: 'kyiv-points',
+                    opacity: 0.0
+                }
+            ]
+        },
+        {
+            id: 'fourth-identifier',
+            alignment: 'left',
+            hidden: false,
+            title: 'February 24, 2022: Putin launches full-scale invasion of Ukraine',
+            image: 'assets/kharkav.jpeg',
+            description: "From the east, Russia strikes at Kharkiv province. The city of Kharkiv itself is heavily shelled, and a massive fire breaks out at the Kharkiv Tractor Plant.",
+            location: {
+                center: [36.04093, 49.23503],
+                zoom: 7.0,
+                pitch: 45.00,
+                bearing: 0.00
+            },
+            mapAnimation: 'flyTo',
+            // rotateAnimation: true,
+            callback: '',
+            onChapterEnter: [
+                {
+                    layer: 'kharkiv',
+                    opacity: 0.8,
+                },
+                {
+                    layer: 'kharkiv-lines',
+                    opacity: 1,
+                },
+                {
+                    layer: 'kharkiv-points',
+                    opacity: 1
+                }
+            ],
+            onChapterExit: [
+                {
+                    layer: 'kharkiv',
+                    opacity: 0.0
+                },
+                {
+                    layer: 'kharkiv-lines',
+                    opacity: 0.0
+                },
+                {
+                    layer: 'kharkiv-points',
+                    opacity: 0.0
+                }
+            ]
+        },
+        {
+            id: 'fifth-identifier',
+            alignment: 'left',
+            hidden: false,
+            title: 'February 24, 2022: Putin launches full-scale invasion of Ukraine',
+            image: 'assets/kherson.jpeg',
+            description: "Russia uses Crimea as a launching point for a southern offensive into the Kherson province. Within a week, the city of Kherson was surrounded, with parts of the city under full Russian control.",
+            location: {
+                center: [33.10341, 46.39235],
+                zoom: 7.0,
+                pitch: 45.00,
+                bearing: 0.00
+                // flyTo additional controls-
+                // These options control the flight curve, making it move
+                // slowly and zoom out almost completely before starting
+                // to pan.
+                //speed: 2, // make the flying slow
+                //curve: 1, // change the speed at which it zooms out
+            },
+            mapAnimation: 'flyTo',
+            // rotateAnimation: true,
+            callback: '',
+            onChapterEnter: [
+                {
+                    layer: 'kherson',
+                    opacity: 0.8,
+                },
+                {
+                    layer: 'kherson-lines',
+                    opacity: 1,
+                },
+                {
+                    layer: 'kherson-points',
+                    opacity: 1
+                }
+            ],
+            onChapterExit: [
+                {
+                    layer: 'kherson',
+                    opacity: 0.0
+                },
+                {
+                    layer: 'kherson-lines',
+                    opacity: 0.0
+                },
+                {
+                    layer: 'kherson-points',
+                    opacity: 0.0
+                }
+            ]
+        },
+        {
+            id: 'sixth-identifier',
+            alignment: 'left',
+            hidden: false,
+            title: "February 28, 2022: Russia's initial advance slows and battle lines are drawn",
+            image: 'assets/tank.jpeg',
+            description: "A week into the invasion, Russia has a military presence in 9 out of Ukraine's 24 provinces. Major cities in the east and south have fallen or are on the cusp of doing so, but Kyiv still stands.",
+            location: {
+                center: [33.25827, 48.18265],
+                zoom: 6.0,
+                pitch: 45.00,
+                bearing: 0.00
+                // flyTo additional controls-
+                // These options control the flight curve, making it move
+                // slowly and zoom out almost completely before starting
+                // to pan.
+                //speed: 2, // make the flying slow
+                //curve: 1, // change the speed at which it zooms out
+            },
+            mapAnimation: 'flyTo',
+            // rotateAnimation: true,
+            callback: '',
+            onChapterEnter: [
+                {
+                    layer: 'occupied-provinces',
+                    opacity: 0.8,
+                },
+            ],
+            onChapterExit: [
+                {
+                    layer: 'occupied-provinces',
+                    opacity: 0.0
+                },
+            ]
+        },  
     ]
 };
