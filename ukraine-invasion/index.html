@@ -213,7 +213,7 @@ config.chapters.forEach((record, idx) => {
     if (record.image) {
         var image = new Image();
         image.src = record.image;
-        image.alt = record.
+        image.alt = record.image_description;
         chapter.appendChild(image);
     }
 
