@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      #scrolly {
+        position: relative;
+        padding: 1rem;
+      }
+
+      .scrolly-overlay {
+        position: relative;
+        padding: 0;
+        max-width: 35rem;
+        margin: 0 auto;
+      }
+
+      .block {
+        font-size: 1.25rem;
+      }
+
+      .sticky-thing {
+        position: -webkit-sticky;
+        position: sticky;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        z-index: 0;
+        top: 0;
+        height: 100vh;
+        /* Center everything inside */
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .step {
+        margin: 0 auto 2rem auto;
+        margin-bottom: 25rem;
+        background-color: #eee;
+        background-color: #fff;
+        color: black;
+      }
+
+      .step p {
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.25rem;
+      }
+
+      .frame-container {
+        padding-top: 5%;
+        display: grid
+      }
+
+      #frame, #frame-2, #ape {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      
+      .hidden { visibility: hidden; }
+
+      /* When it's less than 700 pixels wide, do normal scrollytelling */
+      @media only screen and (min-width: 700px) {
+        #scrolly.side-by-side {
+          display: flex;
+        }
+
+        #scrolly.side-by-side > div {
+          flex-basis: 0;
+          flex-grow: 1;
+          flex-shrink: 1;
+          padding: 0.75em;
+        }
+
+        #scrolly.side-by-side .scrolly-overlay {
+          margin-top: 70vh;
+          order: 0;
+          /* Change these to adjust sizing options */
+          min-width: 25rem;
+          max-width: 30rem;
+          z-index: 1000;
+        }
+
+        #scrolly.side-by-side .sticky-thing {
+          order: 1;
+          flex-grow: 2;
+        }
+      }
+    </style>
+	<script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.0.4/scrollama.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+
+  <body>
+    <section class="hero is-halfheight banner">
+        <div class="hero-body"></div>
+      </section>
+      <div class="container column is-three-fifths-desktop is-full-mobile is-full-tablet">
+        <h1 class="title has-text-bold has-text-centered">The growth in demand for NFTs has priced out many, but new collections offer entry point</h1> 
+		    <div class="block">
+            <p>In a very short period of time, NFTS have seen a surge in popularity. Digital ownership of art and images has long been a problem with no easy solutions — how can anybody own a set of pixels that can be easily reproduced and shared? NFTs seek to solve this problem by using the blockchain to create a public accounting of who owns a particular asset. Similar to how one can transfer ownership of a single Bitcoin from one online wallet to another, ownership of an NFT follows the same rules and patterns. If anyone were to claim to own a rare and valuable piece of digital art, the true owner of the NFT in theory would be able to point to their ledger on the blockchain to either verify or disprove the claim. </p>        
+        </div>
+      </div>
+      <section id="scrolly" class="side-by-side container column is-three-fifths-desktop is-full-mobile">
+        <div class="sticky-thing">
+            <div class='frame-container'>
+              <iframe id="frame" title="The value of the average NFT transaction has exploded over the last 6 months" aria-label="Interactive line chart" id="datawrapper-chart-1TNWg" src="https://datawrapper.dwcdn.net/1TNWg/3/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="468"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(e){if(void 0!==e.data["datawrapper-height"]){var t=document.querySelectorAll("iframe");for(var a in e.data["datawrapper-height"])for(var r=0;r<t.length;r++){if(t[r].contentWindow===e.source)t[r].style.height=e.data["datawrapper-height"][a]+"px"}}}))}();</script>
+              <iframe class="hidden" id="frame-2" title="Popular NFT collections such as Terraform and Meebits generate the most volume" aria-label="Column Chart" id="datawrapper-chart-QO9tT" src="https://datawrapper.dwcdn.net/QO9tT/4/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="545"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(e){if(void 0!==e.data["datawrapper-height"]){var t=document.querySelectorAll("iframe");for(var a in e.data["datawrapper-height"])for(var r=0;r<t.length;r++){if(t[r].contentWindow===e.source)t[r].style.height=e.data["datawrapper-height"][a]+"px"}}}))}();</script>
+              <img class="hidden" id="ape" src="assets/bored_ape.png">
+            </div>
+          <!-- <iframe title="Popular NFT collections such as Terraform and Meebits generate the most volume" aria-label="Column Chart" id="datawrapper-chart-QO9tT" src="https://datawrapper.dwcdn.net/QO9tT/4/" scrolling="yes" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="545"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(e){if(void 0!==e.data["datawrapper-height"]){var t=document.querySelectorAll("iframe");for(var a in e.data["datawrapper-height"])for(var r=0;r<t.length;r++){if(t[r].contentWindow===e.source)t[r].style.height=e.data["datawrapper-height"][a]+"px"}}}))}(); -->
+          </script>
+        </div>
+
+        <div class="scrolly-overlay">
+          <div class="step first-p" id="step-zero">
+            <p>
+              Many people are optimistic about the prospect of NFTs revolutionizing digital ownership, and the market reflects that. Since December 2021, the price of an average NFT transaction among the most popular collections has nearly quadrupled from ~$50,000 to ~$200,000. 
+            </p>
+          </div>
+          <div class="step" id="step-one">
+            <p>This meteoric rise in price has put most popular NFTs out of reach for the average person. Meanwhile, celebrities such as Snoop Dogg and Wiz Khalifa have recently bought NFTs from the “Bored Ape Yacht Club” collection, which regularly sees transactions in excess of $1 million. 
+            </p>
+          </div>
+          <div class="step" id="step-two">
+            <p>It’s no surprise then that the collections with the highest volume are those with some of the most consumer friendly prices. Terraform and Meebits — relatively new collections — have already exceeded the sales volume of more well known collections such as Bored Ape Yacht Club and Cryptopunks. With entry level prices around $3000, these newer collections offer a bridge to some of those who want to invest in NFTs but lack the financial power to buy into the more established collections. 
+            </p>
+          </div>
+          <div class="step" id="step-three">
+            <p>The NFT marketplace is in an early, volatile state. As the popularity of NFTs grows, so will the price of highly sought after collections. But what the recent surge in sales of Terraforms and Meebits shows is that as prices increase, so does the opportunity for new collections to come along and change the equation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    <script>
+
+    d3.select("#step-zero").on('stepin', function(e) {
+        d3.select("#frame").classed('hidden', false)
+        d3.select("#frame-2").classed('hidden', true)
+        d3.select("#ape").classed('hidden', true)
+    })
+
+    d3.select("#step-one").on('stepin', function(e) {
+        d3.select("#frame").classed('hidden', true)
+        d3.select("#ape").classed('hidden', false)
+        d3.select("#frame-2").classed('hidden', true)
+    })
+
+    d3.select("#step-two").on('stepin', function(e) {
+        d3.select("#frame").classed('hidden', true)
+        d3.select("#ape").classed('hidden', true)
+        d3.select("#frame-2").classed('hidden', false)
+    })
+
+
+    </script>
+
+<script>
+    const scroller = scrollama();
+
+	scroller
+		.setup({
+			step: "#scrolly .scrolly-overlay .step",
+			offset: 0.5,
+			debug: false
+		})
+		.onStepEnter(function({ element, index, direction}) {
+			const event = new CustomEvent('stepin', { detail: { direction: direction } })
+			element.dispatchEvent(event);
+		})
+		.onStepExit(function({ element, index, direction }) {
+			const event = new CustomEvent('stepout', { detail: { direction: direction } })
+			element.dispatchEvent(event);
+		});
+
+	window.addEventListener("resize", scroller.resize);
+    </script>
+
+
+    <!-- ai2html resizer script -->
+
+<script type="text/javascript">
+  (function() {
+      // only want one resizer on the page
+      if (document.documentElement.className.indexOf("g-resizer-v3-init") > -1) return;
+      document.documentElement.className += " g-resizer-v3-init";
+      // require IE9+
+      if (!("querySelector" in document)) return;
+      function resizer() {
+          var elements = Array.prototype.slice.call(document.querySelectorAll(".g-artboard[data-min-width]")),
+              widthById = {};
+          elements.forEach(function(el) {
+              var parent = el.parentNode,
+                  width = widthById[parent.id] || parent.getBoundingClientRect().width,
+                  minwidth = el.getAttribute("data-min-width"),
+                  maxwidth = el.getAttribute("data-max-width");
+              widthById[parent.id] = width;
+
+              if (+minwidth <= width && (+maxwidth >= width || maxwidth === null)) {
+                  el.style.display = "block";
+              } else {
+                  el.style.display = "none";
+              }
+          });
+          try {
+              if (window.parent && window.parent.$) {
+                  window.parent.$("body").trigger("resizedcontent", [window]);
+              }
+              if (window.require) {
+                  require(['foundation/main'], function() {
+                      require(['shared/interactive/instances/app-communicator'], function(AppCommunicator) {
+                          AppCommunicator.triggerResize();
+                      });
+                  });
+              }
+          } catch(e) { console.log(e); }
+      }
+
+      document.addEventListener('DOMContentLoaded', resizer);
+      // feel free to replace throttle with _.throttle, if available
+      window.addEventListener('resize', throttle(resizer, 200));        
+
+      function throttle(func, wait) {
+          // from underscore.js
+          var _now = Date.now || function() { return new Date().getTime(); },
+              context, args, result, timeout = null, previous = 0;
+          var later = function() {
+              previous = _now();
+              timeout = null;
+              result = func.apply(context, args);
+              if (!timeout) context = args = null;
+          };
+          return function() {
+              var now = _now(), remaining = wait - (now - previous);
+              context = this;
+              args = arguments;
+              if (remaining <= 0 || remaining > wait) {
+                  if (timeout) {
+                      clearTimeout(timeout);
+                      timeout = null;
+                  }
+                  previous = now;
+                  result = func.apply(context, args);
+                  if (!timeout) context = args = null;
+              } else if (!timeout && options.trailing !== false) {
+                  timeout = setTimeout(later, remaining);
+              }
+              return result;
+          };
+      }
+
+     
+  })();
+</script>
+    <footer class="footer">
+        <div class="content has-text-centered">
+        <p>
+            This project was completed as part of Columbia's Masters in Data Journalism program. Code can be found <a target="_blank" href="https://github.com/vincentvb/vincentvb.github.io/tree/main/nft-analysis">here.</a>
+        </p>
+        </div>
+    </footer>
+  </body>
+</html>
