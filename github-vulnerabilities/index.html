@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Open Source Analysis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@2/css/all.min.css" />
+    <link rel="stylesheet" href="main.css" />
+    <!-- <meta property="og:title" content="How the Penalty-Ridden Raiders Stack Up">
+    <meta property="og:description" content="Despite claims, the Raiders are not disproportionately targeted by referees">
+    <meta property="og:image" content="https://vincentvb.github.io/football-penalties/oakland_coliseum.jpg"> -->
+    <meta property="og:type" content="article">
+	<style>
+		#scrolly {
+		  position: relative;
+		  padding: 1rem;
+		}
+  
+		.scrolly-overlay {
+		  position: relative;
+		  padding: 0;
+		  max-width: 35rem;
+		  margin: 0 auto;
+		}
+  
+		.sticky-thing {
+		  position: -webkit-sticky;
+		  position: sticky;
+		  left: 0;
+		  width: 100%;
+		  margin: 0;
+		  z-index: 0;
+		  top: 0;
+		  height: 100vh;
+		  /* Center everything inside */
+		  display: flex;
+		  justify-content: center;
+		  flex-direction: column;
+		  justify-content: center;
+		}
+  
+		.step {
+		  margin: 0 auto 2rem auto;
+		  margin-bottom: 25rem;
+		  background-color: #eee;
+		  background-color: #fff;
+		  color: black;
+		}
+  
+		.step p {
+		  text-align: center;
+		  padding: 1rem;
+		  font-size: 1.25rem;
+		}
+  
+		.hidden { visibility: hidden; }
+  
+		/* When it's less than 700 pixels wide, do normal scrollytelling */
+		@media only screen and (min-width: 700px) {
+		  #scrolly.side-by-side {
+			display: flex;
+		  }
+  
+		  #scrolly.side-by-side > div {
+			flex-basis: 0;
+			flex-grow: 1;
+			flex-shrink: 1;
+			padding: 0.75em;
+		  }
+  
+		  #scrolly.side-by-side .scrolly-overlay {
+			margin-top: 70vh;
+			order: 0;
+			/* Change these to adjust sizing options */
+			min-width: 15rem;
+			max-width: 20rem;
+		  }
+  
+		  #scrolly.side-by-side .sticky-thing {
+			order: 1;
+			flex-grow: 2;
+		  }
+		}
+	</style>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.0.4/scrollama.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.min.js"></script>
+	<script src="language_data.js"></script>
+	<script>
+
+		const npm = JSON.parse(languageData['Javascript (NPM)'])
+
+		for (key in languageData) {
+			const data = JSON.parse(languageData[key])
+			const newData = [];
+
+			let currentMax = 0;
+
+			for (const date of npm) {
+				const extractedData = data.find((element) => element.x === date.x)
+				if (extractedData) {
+					newData.push({ x: date.x, y: extractedData.y });
+				}
+				else {
+					newData.push({ x: date.x, y: 0 });
+				}
+			}
+
+			// newLanguageData[key] = newData;
+			languageData[key] = newData;
+		}
+
+		const datasets = []
+		const color_codes = [
+			'rgb(0,100,0)',
+			'rgb(139,0,0)',
+			'rgb(255,255,0)',
+			'rgb(255,140,0)',
+			'rgb(0,0,255)',
+			'rgb(75,0,130)',
+			'rgb(165,42,42)',
+			'rgb(64,224,208)'
+		]
+
+		const sortedLang = Object.entries(languageData).sort((a, b) => {
+			return b[1][b[1].length - 1].y - a[1][a[1].length - 1].y
+		})
+
+		for (let i = 0; i < sortedLang.length; i++) {
+			datasets.push({
+				label: sortedLang[i][0],
+				data: sortedLang[i][1],
+				fill: true,
+				backgroundColor: color_codes[i]
+			})
+		}
+
+		const totalDuration = 3000;
+		const delayBetweenPoints = totalDuration / languageData['Javascript (NPM)'].length;
+		const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+		const animation = {
+			x: {
+				type: 'number',
+				easing: 'linear',
+				duration: delayBetweenPoints,
+				from: NaN, // the point is initially skipped
+				delay(ctx) {
+					if (ctx.type !== 'data' || ctx.xStarted) {
+						return 0;
+					}
+					ctx.xStarted = true;
+					return ctx.index * delayBetweenPoints;
+				}
+			},
+			y: {
+				type: 'number',
+				easing: 'linear',
+				duration: delayBetweenPoints,
+				from: previousY,
+				delay(ctx) {
+					if (ctx.type !== 'data' || ctx.yStarted) {
+						return 0;
+					}
+					ctx.yStarted = true;
+					return ctx.index * delayBetweenPoints;
+				}
+			}
+		};
+	  
+		const config = {
+		  type: 'line',
+		  data: { datasets },
+		  options: {
+			  plugins: {
+				  title: {
+					  display: true,
+					  text: "The number of vulnerabilities has been steeply rising over the last year"
+				  }
+			  },
+			  responsive: true,
+			  mantainAspectRatio: true,
+			  aspectRatio: 1,
+			  animation,
+			  scales: {
+				  x: {
+					  type: 'time',
+					  time: {
+						  unit: 'year'
+					  }
+				  },
+				  y: {
+					  title: {
+						  display: true,
+						  text: 'Number of Security Vulnerabilities',
+					  },
+					  stacked: true,
+				  }
+			  }
+		  }
+		};
+
+		const pieData = {
+			labels: ['Overall Critical', 'Overall Non-Critical', 'Java Critical', 'Java Non-Critical', 'Python Critical', 'Python Non-Critical', 'Javascript Critical', 'Javascript Non-Critical'],
+			datasets: [
+				{
+				backgroundColor: ['#AAA', '#777'],
+				data: [19, 81]
+				},
+				{
+				backgroundColor: ['hsl(0, 100%, 60%)', 'hsl(0, 100%, 35%)'],
+				data: [18, 82]
+				},
+				{
+				backgroundColor: ['hsl(100, 100%, 60%)', 'hsl(100, 100%, 35%)'],
+				data: [9, 91]
+				},
+				{
+				backgroundColor: ['hsl(180, 100%, 60%)', 'hsl(180, 100%, 35%)'],
+				data: [29, 71]
+				}
+			]
+		};
+
+		const configPie = {
+			type: 'pie',
+			data: pieData,
+			plugins: [ChartDataLabels],
+			options: {
+				responsive: true,
+				plugins: {
+					title: {
+						display: true,
+						text: 'Javascript vulnerablities are far more likely to be rated critical than others'
+					},
+					legend: {
+						labels: {
+							generateLabels: function(chart) {
+								const original = Chart.overrides.pie.plugins.legend.labels.generateLabels;
+								const labelsOriginal = original.call(this, chart);
+
+								let datasetColors = chart.data.datasets.map(function(e) {
+									return e.backgroundColor;
+								});
+								datasetColors = datasetColors.flat();
+
+								labelsOriginal.forEach(label => {
+									label.datasetIndex = (label.index - label.index % 2) / 2;
+
+									label.hidden = !chart.isDatasetVisible(label.datasetIndex);
+
+									label.fillStyle = datasetColors[label.index];
+								});
+
+								console.log(labelsOriginal, "ORIG")
+
+								return labelsOriginal;
+							},
+						},
+						onClick: function(mouseEvent, legendItem, legend) {
+							legend.chart.getDatasetMeta(
+								legendItem.datasetIndex
+							).hidden = legend.chart.isDatasetVisible(legendItem.datasetIndex);
+							legend.chart.update();
+						},
+						display: window.innerHeight > 410
+					},
+					tooltip: {
+						callbacks: {
+							label: function(context) {
+								const labelIndex = (context.datasetIndex * 2) + context.dataIndex;
+								return context.chart.data.labels[labelIndex] + ': ' + context.formattedValue;
+							}
+						}
+					},
+					datalabels: {
+						formatter: (value, ctx) => {
+							let sum = 0;
+							let dataArr = ctx.chart.data.datasets[0].data;
+							dataArr.map(data => {
+								sum += data;
+							});
+							let percentage = (value*100 / sum).toFixed(0)+"%";
+							console.log(percentage, "PERCENTAGE")
+							return percentage;
+						},
+						color: 'black',
+						font: {
+							weight: 'bold'
+						}
+					},
+				}
+			},
+		};
+
+
+
+	</script>
+</head>
+  <section class="hero is-halfheight banner">
+    <div class="hero-body">
+    </div>
+  </section>
+  <div class="container column is-three-fifths-desktop is-full-mobile is-full-tablet">
+	<h1 class="title has-text-bold has-text-centered">Javascript's open-source NPM packaging system is the least secure of all major languages, according to GitHub data</h1> 
+	<p class='mb-5'><em>May 1, 2022</em></p>
+  	<div class="block">
+  		<p class='is-size-5'>Open-source software forms the backbone of the internet. When you browse a website on your computer, chances are there are dozens of open-source projects included in the code that makes that website run smoothly and bug-free. Every major coding language allows open-source software to be published and easily downloaded using what's called a "package management system." Javascript has NPM (Node Package Manager), Python has PyPI (Python Package Index), etc. Most if not all of the largest open-source packages are hosted on GitHub, which uses code-scanning and user feedback to keep track of security vulnerabilities for a particular package. While GitHub has previously alerted maintainers of these packages when a vulnerability is found, they have also recently begun publishing a <a target='_blank' href='https://github.com/github/advisory-database'>database</a> of all recorded security vulnerabilities over the last few years.</p>        
+  	</div>
+  </div>
+  <section id="scrolly" class="side-by-side container column is-three-fifths-desktop is-full-mobile">
+	<div class="sticky-thing">
+		<div class='frame-container' style="position: relative">
+		  <canvas id="myChart"></canvas>
+		</div>
+	  </script>
+	</div>
+
+	<div class="scrolly-overlay">
+	  <div class="step first-p" id="step-zero">
+		<p class='has-text-left'>
+		  An analysis of the data reveals that the last year has seen a steep rise in the total number of security vulnerabilities. Javascript's NPM package system dominates overall, representing over 1/3 of the total vulnerabilities recorded in GitHub's data.
+		</p>
+	  </div>
+	  <div class="step" id="step-one">
+		<p class='has-text-left'>
+		  Open-source security vulnerabilities threaten the stability and reliability of high-profile software. A <a target='_blank' href='https://theconversation.com/what-is-log4j-a-cybersecurity-expert-explains-the-latest-internet-vulnerability-how-bad-it-is-and-whats-at-stake-173896'>vulnerability in the Log4j library</a>, discovered in December 2021, allowed bad actors to access remote servers, steal information, and wreak havoc. Code added to a popular Javascript open-source package following the outbreak of war in Ukraine <a href='https://arstechnica.com/information-technology/2022/03/sabotage-code-added-to-popular-npm-package-wiped-files-in-russia-and-belarus/'>wiped the hard drive</a> of anyone running the code with a Russian IP address.
+		</p>
+	  </div>
+	  <div class="step" id="step-two">
+		<p class='has-text-left'>
+		  Each vulnerability in the dataset is assigned a severity level: Low, Medium, High, or Critical. The data shows that the number of Javascript vulnerabilities rated as "critical" is approximately 29%, significantly higher than the overall average of 19%. 
+		</p>
+	  </div>
+	  <div class="step" id="step-three">
+		<p class='has-text-left'>
+		  The score is based on the "<a target='_blank' href='https://www.first.org/cvss/v3.1/specification-document'>Common Vulnerability Score System</a>", which uses metrics such as how much impact an attacker could theoretically have, how easy it would be to stage an attack, and how difficult it'd be to fix the vulnerability. The higher the threat, the higher the severity score.
+		</p>
+	  </div>
+	</div>
+  </section>
+  <div class="container column is-three-fifths-desktop is-full-mobile is-full-tablet mb-5">
+	<div class="block">
+		<p class='is-size-5'>Javascript runs the web, so it's not surprising that it'd be the <a target='_blank' href='https://threatpost.com/npm-package-steals-chrome-passwords/168004/'>target of hackers and bad actors</a>. It also consistently ranks as the most popular programming language <a target='_blank' href='https://insights.stackoverflow.com/survey/2021'>in surveys</a>, and is a popular language for those learning to program. As vulnerabilities increase, and the number of open-source dependencies in large software projects continues to grow, vigilance is more important than ever.</p>        
+	</div>
+  </div>
+  <footer class="footer">
+	<div class="content has-text-centered">
+	  <p>
+		By <a href="https://vincentvb.github.io/">Vincent Van Buskirk</a>. All data comes from the <a href='https://github.com/github/advisory-database'>GitHub Advisory Database</a>. Source code can be found <a target='_blank' href='https://github.com/vincentvb/vincentvb.github.io/github-vulnerabilities'>here</a>.
+	  </p>
+	</div>
+  </footer>
+  <script>
+	let myChart = null;
+	d3.select("#step-zero").on('stepin', function(e) {
+		if (myChart) {
+			myChart.destroy()
+		}
+		myChart = new Chart(
+			document.getElementById('myChart'),
+			config
+		)
+	})
+
+	d3.select("#step-two").on('stepin', function(e) {
+		if (myChart) {
+			myChart.destroy()
+		}
+		myChart = new Chart(
+			document.getElementById('myChart'),
+			configPie
+		)
+	})
+  </script>
+  <script>
+	const scroller = scrollama();
+
+	scroller
+		.setup({
+			step: "#scrolly .scrolly-overlay .step",
+			offset: 0.75,
+			debug: false
+		})
+		.onStepEnter(function({ element, index, direction}) {
+			const event = new CustomEvent('stepin', { detail: { direction: direction } })
+			element.dispatchEvent(event);
+		})
+		.onStepExit(function({ element, index, direction }) {
+			const event = new CustomEvent('stepout', { detail: { direction: direction } })
+			element.dispatchEvent(event);
+		});
+
+	window.addEventListener("resize", scroller.resize);
+
+	// const myChart = new Chart(
+	// 	document.getElementById('myChart'),
+	// 	config
+	// );
+  </script>
+</html>

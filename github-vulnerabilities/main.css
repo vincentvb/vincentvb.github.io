@@ -1,5 +1,5 @@
 .banner {
-    background-image: url("assets/oakland_coliseum.jpeg");
+    background-image: url("assets/git.jpeg");
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -8,9 +8,8 @@
 }
 
 .chart {
-    width: 50%;
+    width: 75%;
 }
-
 
 @media screen and (max-width: 540px) {
     .chart {
